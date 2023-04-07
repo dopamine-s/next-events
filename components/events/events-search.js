@@ -1,7 +1,10 @@
+import { useRef } from 'react';
 import Button from '../ui/button';
 import classes from './events-search.module.css';
 
 function EventsSearch(props) {
+  const yearInputRef = useRef();
+  const monthInputRef = useRef();
   const currentYear = new Date().getFullYear();
   const years = Array.from(
     { length: currentYear - 2020 + 1 },
@@ -22,12 +25,21 @@ function EventsSearch(props) {
     'December',
   ];
 
+  function submitHandler(event) {
+    event.preventDefault();
+
+    const selectedYear = yearInputRef.current.value;
+    const selectedMonth = monthInputRef.current.value;
+
+    props.onSearch(selectedYear, selectedMonth);
+  }
+
   return (
-    <form className={classes.form}>
+    <form className={classes.form} onSubmit={submitHandler}>
       <div className={classes.controls}>
         <div className={classes.control}>
           <label htmlFor="year">Year</label>
-          <select id="year">
+          <select id="year" ref={yearInputRef}>
             {years.map((year) => (
               <option key={year} value={year}>
                 {year}
@@ -37,7 +49,7 @@ function EventsSearch(props) {
         </div>
         <div className={classes.control}>
           <label htmlFor="month">Month</label>
-          <select id="month">
+          <select id="month" ref={monthInputRef}>
             {months.map((month, index) => (
               <option key={index} value={index + 1}>
                 {month}
