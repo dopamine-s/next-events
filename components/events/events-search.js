@@ -7,8 +7,8 @@ function EventsSearch(props) {
   const monthInputRef = useRef();
   const currentYear = new Date().getFullYear();
   const years = Array.from(
-    { length: currentYear - 2020 + 1 },
-    (_, i) => 2020 + i
+    { length: currentYear - 2021 + 1 },
+    (_, i) => 2021 + i
   );
   const months = [
     'January',
