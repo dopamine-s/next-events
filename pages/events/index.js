@@ -10,7 +10,6 @@ function AllEventsPage() {
 
   function findEventsHandler(year, month) {
     const fullPath = `/events/${year}/${month}`;
-    console.log(month, year);
     router.push(fullPath);
   }
 
