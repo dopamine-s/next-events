@@ -1,7 +1,12 @@
+export const BASE_URL =
+  'https://nextjs-d1ee1-default-rtdb.europe-west1.firebasedatabase.app/events.json';
+
 export async function getAllEvents() {
-  const response = await fetch(
-    'https://nextjs-d1ee1-default-rtdb.europe-west1.firebasedatabase.app/events.json'
-  );
+  const response = await fetch(BASE_URL);
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch events');
+  }
 
   const data = await response.json();
 
@@ -18,27 +23,39 @@ export async function getAllEvents() {
 }
 
 export async function getFeaturedEvents() {
-  const allEvents = await getAllEvents();
-
-  return allEvents.filter((event) => event.isFeatured);
+  try {
+    const allEvents = await getAllEvents();
+    return allEvents.filter((event) => event.isFeatured);
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 
 export async function getEventById(id) {
-  const allEvents = await getAllEvents();
-  return allEvents.find((event) => event.id === id);
+  try {
+    const allEvents = await getAllEvents();
+    return allEvents.find((event) => event.id === id);
+  } catch (error) {
+    throw new Error('Failed to fetch event by id.');
+  }
 }
 
 export async function getFilteredEvents(dateFilter) {
-  const { year, month } = dateFilter;
+  try {
+    const { year, month } = dateFilter;
 
-  const allEvents = await getAllEvents();
+    const allEvents = await getAllEvents();
 
-  let filteredEvents = allEvents.filter((event) => {
-    const eventDate = new Date(event.date);
-    return (
-      eventDate.getFullYear() === year && eventDate.getMonth() === month - 1
-    );
-  });
+    let filteredEvents = allEvents.filter((event) => {
+      const eventDate = new Date(event.date);
+      return (
+        eventDate.getFullYear() === year && eventDate.getMonth() === month - 1
+      );
+    });
 
-  return filteredEvents;
+    return filteredEvents;
+  } catch (error) {
+    throw new Error('Failed to fetch filtered events.');
+  }
 }

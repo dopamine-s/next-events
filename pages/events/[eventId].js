@@ -30,11 +30,17 @@ function EventDetailPage(props) {
 
 export async function getStaticProps(context) {
   const eventId = context.params.eventId;
-  const event = await getEventById(eventId);
+  let selectedEvent = null;
+
+  try {
+    selectedEvent = await getEventById(eventId);
+  } catch (error) {
+    console.error(error);
+  }
 
   return {
     props: {
-      selectedEvent: event,
+      selectedEvent: selectedEvent,
     },
     revalidate: 30,
   };
