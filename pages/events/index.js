@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { getAllEvents } from '../../helpers/api-utils';
 import EventList from '../../components/events/event-list';
 import EventsSearch from '../../components/events/events-search';
+import ErrorAlert from '../../components/ui/error-alert';
 
 function AllEventsPage(props) {
   const events = props.events;
@@ -13,23 +14,41 @@ function AllEventsPage(props) {
     router.push(fullPath);
   }
 
+  if (!events || !events.length) {
+    return (
+      <ErrorAlert>
+        <p>Error fetching events!</p>
+      </ErrorAlert>
+    );
+  }
+
   return (
     <Fragment>
       <EventsSearch onSearch={findEventsHandler} />
-      <EventList events={events} />
+      {events && <EventList events={events} />}
     </Fragment>
   );
 }
 
 export async function getStaticProps() {
-  const events = await getAllEvents();
+  try {
+    const events = await getAllEvents();
 
-  return {
-    props: {
-      events,
-    },
-    revalidate: 60,
-  };
+    return {
+      props: {
+        events,
+      },
+      revalidate: 60,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      props: {
+        events: [],
+      },
+      revalidate: 60,
+    };
+  }
 }
 
 export default AllEventsPage;

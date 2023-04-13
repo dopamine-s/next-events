@@ -1,8 +1,19 @@
 import EventList from '../components/events/event-list';
 import { getFeaturedEvents } from '../helpers/api-utils';
+import ErrorAlert from '../components/ui/error-alert';
 
 function HomePage(props) {
-  return <EventList events={props.featuredEvents} />;
+  const events = props.featuredEvents;
+
+  if (events.length === 0) {
+    return (
+      <ErrorAlert>
+        <p>Error fetching featured events!</p>
+      </ErrorAlert>
+    );
+  }
+
+  return <EventList events={events} />;
 }
 
 export async function getStaticProps() {
