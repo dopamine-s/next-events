@@ -4,6 +4,7 @@ import { validateEmail } from '../../helpers/utils';
 
 function NewsletterRegistration() {
   const [emailValidity, setEmailValidity] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
   const emailInputRef = useRef();
 
   function registrationHandler(event) {
@@ -13,8 +14,6 @@ function NewsletterRegistration() {
     setEmailValidity(isValidEmail);
 
     if (isValidEmail) {
-      console.log('pass');
-
       fetch('/api/newsletter', {
         method: 'POST',
         body: JSON.stringify({ email: enteredEmail }),
@@ -23,7 +22,7 @@ function NewsletterRegistration() {
         },
       })
         .then((response) => response.json())
-        .then((data) => console.log(data));
+        .then((data) => setSuccessMessage(data.message));
     }
   }
 
@@ -54,7 +53,11 @@ function NewsletterRegistration() {
 
   return (
     <section className={classes.newsletter}>
-      <h2>Sign up to stay updated!</h2>
+      <h2>
+        {successMessage
+          ? 'Signed up successfully!'
+          : 'Sign up to stay updated!'}
+      </h2>
       <form onSubmit={registrationHandler}>
         <div className={controlClasses}>
           <input
