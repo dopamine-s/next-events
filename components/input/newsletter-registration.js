@@ -4,7 +4,8 @@ import { validateEmail } from '../../helpers/utils';
 
 function NewsletterRegistration() {
   const [emailValidity, setEmailValidity] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [signUpMessage, setSignUpMessage] = useState(null);
+  const [isSignUpError, setIsSignUpError] = useState(false);
   const emailInputRef = useRef();
 
   function registrationHandler(event) {
@@ -22,7 +23,19 @@ function NewsletterRegistration() {
         },
       })
         .then((response) => response.json())
-        .then((data) => setSuccessMessage(data.message));
+        .then((data) => {
+          setSignUpMessage(data.message);
+          if (data.message === 'Error! Try to sign up again!') {
+            setIsSignUpError(true);
+            setSignUpMessage(data.message);
+            setTimeout(() => {
+              setIsSignUpError(false);
+              setSignUpMessage(null);
+            }, 5000);
+          } else {
+            setSignUpMessage(data.message);
+          }
+        });
     }
   }
 
@@ -47,16 +60,16 @@ function NewsletterRegistration() {
     setEmailValidity(null);
   }
 
+  const h2Classes = `${isSignUpError ? classes.invalid : ''}`;
+
   const controlClasses = `${classes.control} ${
     emailValidity === false && classes.invalid
   }`;
 
   return (
     <section className={classes.newsletter}>
-      <h2>
-        {successMessage
-          ? 'Signed up successfully!'
-          : 'Sign up to stay updated!'}
+      <h2 className={h2Classes}>
+        {signUpMessage ?? 'Sign up to stay updated!'}
       </h2>
       <form onSubmit={registrationHandler}>
         <div className={controlClasses}>
