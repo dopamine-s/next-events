@@ -1,7 +1,7 @@
 import Button from '../ui/button';
 import classes from './results-title.module.css';
 
-function ResultsTitle(props) {
+function ResultsTitle({ props }) {
   const { date } = props;
 
   const humanReadableDate = new Date(date).toLocaleDateString('en-US', {
@@ -12,7 +12,7 @@ function ResultsTitle(props) {
   return (
     <section className={classes.title}>
       <h1>Events in {humanReadableDate}</h1>
-      <Button link='/events'>Show all events</Button>
+      <Button link="/events">Show all events</Button>
     </section>
   );
 }
