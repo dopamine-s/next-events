@@ -8,8 +8,8 @@ import EventContent from '../../components/event-detail/event-content';
 import ErrorAlert from '../../components/ui/error-alert';
 import Comments from '../../components/input/comments';
 
-function EventDetailPage(props) {
-  const event = props.selectedEvent;
+function EventDetailPage({ selectedEvent }) {
+  const event = selectedEvent;
 
   if (!event) {
     return (
@@ -47,7 +47,7 @@ export async function getStaticProps(context) {
 
   return {
     props: {
-      selectedEvent: selectedEvent,
+      selectedEvent,
     },
     revalidate: 30,
   };

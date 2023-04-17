@@ -5,8 +5,8 @@ import NewsletterRegistration from '../components/input/newsletter-registration'
 import ErrorAlert from '../components/ui/error-alert';
 import { getFeaturedEvents } from '../helpers/api-utils';
 
-function HomePage(props) {
-  const events = props.featuredEvents;
+function HomePage({ featuredEvents }) {
+  const events = featuredEvents;
 
   if (events.length === 0) {
     return (

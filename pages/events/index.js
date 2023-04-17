@@ -7,8 +7,7 @@ import EventList from '../../components/events/event-list';
 import EventsSearch from '../../components/events/events-search';
 import ErrorAlert from '../../components/ui/error-alert';
 
-function AllEventsPage(props) {
-  const events = props.events;
+function AllEventsPage({ events }) {
   const router = useRouter();
 
   function findEventsHandler(year, month) {
