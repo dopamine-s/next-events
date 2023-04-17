@@ -25,15 +25,14 @@ async function handler(req, res) {
       const db = client.db();
       const emailsCollection = db.collection('emails');
       await emailsCollection.insertOne({ email: userEmail });
+      res.status(201).json({ message: 'Signed up!' });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'An error occurred!' });
+      res.status(500).json({ message: 'Error! Try to sign up again!' });
     } finally {
       // Ensures that the client will close when you finish/error
       await client.close();
     }
-
-    res.status(201).json({ message: 'Signed up!' });
   }
 }
 

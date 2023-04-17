@@ -8,6 +8,10 @@
   text-align: center;
 }
 
+.newsletter h2.invalid {
+  color: red;
+}
+
 .control input {
   font: inherit;
   padding: 0.25rem;
