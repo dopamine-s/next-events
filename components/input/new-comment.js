@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import classes from './new-comment.module.css';
 
-function NewComment(props) {
+function NewComment({ onAddComment, isSubmitting }) {
   const [isInvalid, setIsInvalid] = useState(false);
 
   const emailInputRef = useRef();
@@ -28,11 +28,13 @@ function NewComment(props) {
       return;
     }
 
-    props.onAddComment({
+    const commentData = {
       email: enteredEmail,
       name: enteredName,
       text: enteredComment,
-    });
+    };
+
+    onAddComment(commentData);
   }
 
   return (
@@ -52,7 +54,7 @@ function NewComment(props) {
         <textarea id="comment" rows="5" ref={commentInputRef}></textarea>
       </div>
       {isInvalid && <p>Please enter a valid email address and comment!</p>}
-      <button>Submit</button>
+      <button disabled={isSubmitting}>Submit</button>
     </form>
   );
 }

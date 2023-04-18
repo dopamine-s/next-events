@@ -4,10 +4,7 @@ import useSWR from 'swr';
 
 import EventList from '../../components/events/event-list';
 import ResultsTitle from '../../components/events/results-title';
-import {
-  // getFilteredEvents,
-  BASE_URL,
-} from '../../helpers/api-utils';
+import { BASE_EVENTS_URL } from '../../helpers/api-utils';
 import Button from '../../components/ui/button';
 import ErrorAlert from '../../components/ui/error-alert';
 
@@ -17,7 +14,7 @@ function FilteredEventsPage() {
 
   const filterData = router.query.slug;
 
-  const { data, error } = useSWR(BASE_URL, (url) =>
+  const { data, error } = useSWR(BASE_EVENTS_URL, (url) =>
     fetch(url).then((res) => res.json())
   );
 

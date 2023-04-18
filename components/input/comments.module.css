@@ -19,3 +19,7 @@
 .comments button:active {
   background-color: #dcfff9;
 }
+
+.error {
+  color: red;
+}

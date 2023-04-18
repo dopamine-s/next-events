@@ -1,9 +1,12 @@
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import {
+  BASE_API_HANDLERS_URI,
+  createMongoClient,
+  insertDocumentIntoCollection,
+} from '../../helpers/db-utils';
+
+const mongoClient = createMongoClient(BASE_API_HANDLERS_URI);
 
 async function handler(req, res) {
-  const uri =
-    'mongodb+srv://Dopamine-s:Ro75ZTssxvZGW1P2@cluster0.e7nhbaz.mongodb.net/events?retryWrites=true&w=majority';
-
   if (req.method === 'POST') {
     const userEmail = req.body.email;
 
@@ -12,19 +15,10 @@ async function handler(req, res) {
       return;
     }
 
-    // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-    const client = new MongoClient(uri, {
-      serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-      },
-    });
     try {
-      await client.connect();
-      const db = client.db();
-      const emailsCollection = db.collection('newsletter');
-      await emailsCollection.insertOne({ email: userEmail });
+      await insertDocumentIntoCollection(mongoClient, 'newsletter', {
+        email: userEmail,
+      });
       res.status(201).json({ message: 'Signed up!' });
     } catch (error) {
       console.error(error);

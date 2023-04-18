@@ -7,22 +7,37 @@ import classes from './comments.module.css';
 function Comments({ eventId }) {
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [formIsSubmitting, setFormIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (showComments) {
+      setLoading(true);
       fetch('/api/comments/' + eventId)
-        .then((responce) => responce.json())
+        .then((response) => response.json())
         .then((data) => {
           setComments(data.comments);
+          if (data.message === 'Error fetching comments!') {
+            setError(data.message);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          setError('Error fetching comments!');
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
-  }, [showComments]);
+  }, [showComments, eventId]);
 
   function toggleCommentsHandler() {
     setShowComments((prevStatus) => !prevStatus);
   }
 
   function addCommentHandler(commentData) {
+    setFormIsSubmitting(true);
     fetch('/api/comments/' + eventId, {
       method: 'POST',
       body: JSON.stringify(commentData),
@@ -31,7 +46,17 @@ function Comments({ eventId }) {
       },
     })
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => {
+        const newComment = { ...commentData, _id: data.comment._id };
+        setComments((prevComments) => [newComment, ...prevComments]);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError('Error adding comment!');
+      })
+      .finally(() => {
+        setFormIsSubmitting(false);
+      });
   }
 
   return (
@@ -39,8 +64,23 @@ function Comments({ eventId }) {
       <button onClick={toggleCommentsHandler}>
         {showComments ? 'Hide' : 'Show'} Comments
       </button>
-      {showComments && <NewComment onAddComment={addCommentHandler} />}
-      {showComments && <CommentList comments={comments} />}
+      {showComments && (
+        <NewComment
+          onAddComment={addCommentHandler}
+          isSubmitting={formIsSubmitting}
+        />
+      )}
+      {loading && <p>Loading...</p>}
+      {!loading && !error && showComments && comments.length > 0 && (
+        <CommentList comments={comments} />
+      )}
+      {!loading &&
+        !error &&
+        showComments &&
+        (!comments || comments.length === 0) && <p>Still no comments</p>}
+      {!loading && error && showComments && (
+        <p className={classes.error}>{error}</p>
+      )}
     </section>
   );
 }
