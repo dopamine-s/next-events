@@ -39,9 +39,7 @@ async function handler(req, res) {
       await client.connect();
       const db = client.db();
       const commentsCollection = db.collection('comments');
-      const result = await commentsCollection.insertOne({
-        comment: newComment,
-      });
+      const result = await commentsCollection.insertOne(newComment);
       newComment.id = result.insertedId;
       console.log(newComment.id);
       res.status(201).json({ message: 'Added comment', comment: newComment });
@@ -55,12 +53,24 @@ async function handler(req, res) {
   }
 
   if (req.method === 'GET') {
-    const dummyList = [
-      { id: 'c1', name: 'Fedor', text: 'A first comment' },
-      { id: 'c2', name: 'Manuel', text: 'A second comment' },
-    ];
-
-    res.status(200).json({ comments: dummyList });
+    try {
+      await client.connect();
+      const db = client.db();
+      const commentsCollection = db.collection('comments');
+      const result = await commentsCollection
+        .find()
+        .sort({ _id: -1 })
+        .toArray();
+      res
+        .status(200)
+        .json({ message: 'Success fetching comments!', comments: result });
+    } catch (error) {
+      console.error(error);
+      res.status(400).json({ message: 'Error fetching comments!' });
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
   }
 }
 export default handler;
