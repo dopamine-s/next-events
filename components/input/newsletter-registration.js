@@ -35,7 +35,8 @@ function NewsletterRegistration() {
           } else {
             setSignUpMessage(data.message);
           }
-        });
+        })
+        .catch((error) => console(error));
     }
   }
 

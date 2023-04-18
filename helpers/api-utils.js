@@ -1,8 +1,8 @@
-export const BASE_URL =
+export const BASE_EVENTS_URL =
   'https://nextjs-d1ee1-default-rtdb.europe-west1.firebasedatabase.app/events.json';
 
 export async function getAllEvents() {
-  const response = await fetch(BASE_URL);
+  const response = await fetch(BASE_EVENTS_URL);
 
   if (!response.ok) {
     throw new Error('Failed to fetch events');
