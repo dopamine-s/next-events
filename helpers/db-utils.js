@@ -24,9 +24,9 @@ export async function insertDocumentIntoCollection(
   await db.collection(collection).insertOne(document);
 }
 
-export async function getCollection(client, collection) {
+export async function getCollection(client, collection, filter = {}) {
   await client.connect();
   const db = client.db();
-  const data = await db.collection(collection).find();
+  const data = await db.collection(collection).find(filter);
   return data;
 }

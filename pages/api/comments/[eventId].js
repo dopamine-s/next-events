@@ -47,7 +47,9 @@ async function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      const collection = await getCollection(mongoClient, 'comments');
+      const collection = await getCollection(mongoClient, 'comments', {
+        eventId: eventId,
+      });
       const result = await collection.sort({ _id: -1 }).toArray();
       res
         .status(200)
