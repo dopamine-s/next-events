@@ -25,7 +25,7 @@ async function handler(req, res) {
       res.status(500).json({ message: 'Error! Try to sign up again!' });
     } finally {
       // Ensures that the client will close when you finish/error
-      await client.close();
+      await mongoClient.close();
     }
   }
 }
