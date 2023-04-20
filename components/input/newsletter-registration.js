@@ -1,12 +1,15 @@
-import { useRef, useState, useEffect } from 'react';
-import classes from './newsletter-registration.module.css';
+import { useRef, useState, useEffect, useContext } from 'react';
+
+import NotificationContext from '../../store/notification-context';
 import { validateEmail } from '../../helpers/utils';
+import classes from './newsletter-registration.module.css';
 
 function NewsletterRegistration() {
   const [emailValidity, setEmailValidity] = useState(null);
   const [signUpMessage, setSignUpMessage] = useState(null);
   const [isSignUpError, setIsSignUpError] = useState(false);
   const emailInputRef = useRef();
+  const notificationCtx = useContext(NotificationContext);
 
   function registrationHandler(event) {
     event.preventDefault();
@@ -15,6 +18,12 @@ function NewsletterRegistration() {
     setEmailValidity(isValidEmail);
 
     if (isValidEmail) {
+      notificationCtx.showNotification({
+        title: 'Signing up...',
+        message: 'Registering for newsletter',
+        status: 'pending',
+      });
+
       fetch('/api/newsletter', {
         method: 'POST',
         body: JSON.stringify({ email: enteredEmail }),
@@ -22,21 +31,49 @@ function NewsletterRegistration() {
           'Content-Type': 'application/json',
         },
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (!response.ok) {
+            console.log(response);
+            throw new Error(`
+              ${response.statusText ?? 'HTTP error'}, status = ${
+              response.status
+            }`);
+          }
+          return response.json();
+        })
         .then((data) => {
           setSignUpMessage(data.message);
-          if (data.message === 'Error! Try to sign up again!') {
-            setIsSignUpError(true);
-            setSignUpMessage(data.message);
-            setTimeout(() => {
-              setIsSignUpError(false);
-              setSignUpMessage(null);
-            }, 5000);
-          } else {
-            setSignUpMessage(data.message);
-          }
+          setTimeout(() => {
+            setIsSignUpError(false);
+          }, 3000);
+          notificationCtx.showNotification({
+            title: 'Success!',
+            message: 'Successfully signed up for newsletter!',
+            status: 'success',
+          });
         })
-        .catch((error) => console(error));
+        .catch((error) => {
+          console.error(error);
+          setIsSignUpError(true);
+          setSignUpMessage('Failed to register!');
+          setTimeout(() => {
+            setIsSignUpError(false);
+            setSignUpMessage(null);
+          }, 3000);
+          notificationCtx.showNotification({
+            title: 'Error!',
+            message:
+              'Failed to register for newsletter. ' + error.message ?? '',
+            status: 'error',
+          });
+        });
+    } else {
+      setIsSignUpError(true);
+      setSignUpMessage('Please enter a valid email!');
+      setTimeout(() => {
+        setIsSignUpError(false);
+        setSignUpMessage(null);
+      }, 3000);
     }
   }
 
