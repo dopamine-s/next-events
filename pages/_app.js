@@ -1,9 +1,9 @@
 import Head from 'next/head';
 
 import Layout from '../components/layout/layout';
-import '../styles/globals.css';
-import Notification from '../components/ui/notification';
 import NotificationContextProvider from '../store/NotificationProvider';
+
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -18,7 +18,6 @@ function MyApp({ Component, pageProps }) {
           />
         </Head>
         <Component {...pageProps} />
-        <Notification title="Test" message="This is a test." status="pending" />
       </Layout>
     </NotificationContextProvider>
   );
