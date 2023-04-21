@@ -23,3 +23,8 @@
 .error {
   color: red;
 }
+
+.loader {
+  height: 100vh;
+  overflow: hidden;
+}
