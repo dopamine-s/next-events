@@ -110,7 +110,7 @@ function Comments({ eventId }) {
           isSubmitting={formIsSubmitting}
         />
       )}
-      {loading && <p>Loading...</p>}
+      {loading && <p className={classes.loader}>Loading...</p>}
       {!loading && !error && showComments && comments.length > 0 && (
         <CommentList comments={comments} />
       )}

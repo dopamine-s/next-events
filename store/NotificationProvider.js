@@ -13,10 +13,6 @@ function NotificationContextProvider(props) {
     setActiveNotification(null);
   }
 
-  function clearSuccessfullyAddedHandler() {
-    setSuccessfullyAdded(false);
-  }
-
   useEffect(() => {
     if (activeNotification && activeNotification.status === 'success') {
       setSuccessfullyAdded(true);
@@ -25,7 +21,7 @@ function NotificationContextProvider(props) {
       }, 3000);
       return () => {
         clearTimeout(timer);
-        clearSuccessfullyAddedHandler();
+        setSuccessfullyAdded(false);
       };
     } else if (activeNotification && activeNotification.status === 'error') {
       const timer = setTimeout(() => {
@@ -42,7 +38,6 @@ function NotificationContextProvider(props) {
     successfullyAdded: successfullyAdded,
     showNotification: showNotificationHandler,
     hideNotification: hideNotificationHandler,
-    clearSuccessfullyAdded: clearSuccessfullyAddedHandler,
   };
 
   return (

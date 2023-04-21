@@ -5,7 +5,6 @@ const NotificationContext = createContext({
   notification: null, // {title, message, status}
   showNotification: function (notificationData) {},
   hideNotification: function () {},
-  clearSuccessfullyAdded: function () {},
 });
 
 export default NotificationContext;
