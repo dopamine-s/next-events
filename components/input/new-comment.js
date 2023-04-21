@@ -1,12 +1,14 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect, useContext } from 'react';
 import classes from './new-comment.module.css';
+import NotificationContext from '../../store/notification-context';
 
 function NewComment({ onAddComment, isSubmitting }) {
   const [isInvalid, setIsInvalid] = useState(false);
-
+  const [isFormCleared, setIsFormCleared] = useState(false);
   const emailInputRef = useRef();
   const nameInputRef = useRef();
   const commentInputRef = useRef();
+  const notificationCtx = useContext(NotificationContext);
 
   function sendCommentHandler(event) {
     event.preventDefault();
@@ -35,7 +37,23 @@ function NewComment({ onAddComment, isSubmitting }) {
     };
 
     onAddComment(commentData);
+    setIsInvalid(false);
   }
+  useEffect(() => {
+    if (notificationCtx.successfullyAdded) {
+      setIsFormCleared(true);
+    }
+  }, [notificationCtx.successfullyAdded]);
+
+  useEffect(() => {
+    if (isFormCleared) {
+      emailInputRef.current.value = '';
+      nameInputRef.current.value = '';
+      commentInputRef.current.value = '';
+      setIsInvalid(false);
+      setIsFormCleared(false);
+    }
+  }, [isFormCleared]);
 
   return (
     <form className={classes.form} onSubmit={sendCommentHandler}>
