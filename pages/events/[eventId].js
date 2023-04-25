@@ -41,8 +41,17 @@ export async function getStaticProps(context) {
 
   try {
     selectedEvent = await getEventById(eventId);
+
+    if (!selectedEvent) {
+      throw new Error('Event not found');
+    }
   } catch (error) {
     console.error(error);
+    return {
+      props: {
+        selectedEvent: null,
+      },
+    };
   }
 
   return {
