@@ -1,11 +1,11 @@
 import {
-  BASE_API_HANDLERS_URI,
   createMongoClient,
   insertDocumentIntoCollection,
   getCollection,
 } from '../../../helpers/db-utils';
 
-const mongoClient = createMongoClient(BASE_API_HANDLERS_URI);
+const handlersUri = process.env.NEXT_PUBLIC_API_HANDLERS_URI;
+const mongoClient = createMongoClient(handlersUri);
 
 async function handler(req, res) {
   const eventId = req.query.eventId;
