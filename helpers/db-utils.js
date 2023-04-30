@@ -1,8 +1,5 @@
 import { MongoClient, ServerApiVersion } from 'mongodb';
 
-export const BASE_API_HANDLERS_URI =
-  'mongodb+srv://Dopamine-s:Ro75ZTssxvZGW1P2@cluster0.e7nhbaz.mongodb.net/events?retryWrites=true&w=majority';
-
 export function createMongoClient(uri) {
   const client = new MongoClient(uri, {
     serverApi: {
