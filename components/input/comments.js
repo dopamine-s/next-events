@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 
 import CommentList from './comment-list';
 import NewComment from './new-comment';
@@ -14,7 +14,7 @@ function Comments({ eventId }) {
 
   const notificationCtx = useContext(NotificationContext);
 
-  function fetchComments() {
+  const fetchComments = useCallback(() => {
     if (showComments) {
       setError(null);
       setLoading(true);
@@ -34,18 +34,18 @@ function Comments({ eventId }) {
           setLoading(false);
         });
     }
-  }
+  }, [eventId, showComments]);
 
   useEffect(() => {
     fetchComments();
-  }, [showComments, eventId]);
+  }, [fetchComments]);
 
   useEffect(() => {
     if (notificationCtx.successfullyAdded) {
       setError(null);
       fetchComments();
     }
-  }, [notificationCtx.successfullyAdded]);
+  }, [fetchComments, notificationCtx.successfullyAdded]);
 
   function toggleCommentsHandler() {
     setShowComments((prevStatus) => !prevStatus);
