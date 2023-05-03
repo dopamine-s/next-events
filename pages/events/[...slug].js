@@ -5,9 +5,10 @@ import useSWR from 'swr';
 
 import EventList from '../../components/events/event-list';
 import ResultsTitle from '../../components/events/results-title';
-import { BASE_EVENTS_URL } from '../../helpers/api-utils';
 import Button from '../../components/ui/button';
 import ErrorAlert from '../../components/ui/error-alert';
+
+const baseUrl = process.env.NEXT_PUBLIC_EVENTS_URL;
 
 function FilteredEventsPage() {
   const [loadedEvents, setLoadedEvents] = useState();
@@ -15,7 +16,7 @@ function FilteredEventsPage() {
 
   const filterData = router.query.slug;
 
-  const { data, error } = useSWR(BASE_EVENTS_URL, (url) =>
+  const { data, error } = useSWR(baseUrl, (url) =>
     fetch(url).then((res) => res.json())
   );
 
